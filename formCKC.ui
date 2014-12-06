@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>formCKC</class>
+ <widget class="QMainWindow" name="formCKC">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1361</width>
+    <height>775</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Приведение СКС к новому виду</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="gbJournalBefore2013">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>521</width>
+      <height>581</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Журналы до 2013г</string>
+    </property>
+    <widget class="QListWidget" name="lwJournals">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>501</width>
+       <height>491</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="cbJournals">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>501</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="gbJurNumsBefore2013">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>811</width>
+      <height>581</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Соответствующие номера</string>
+    </property>
+    <widget class="QComboBox" name="cbJurNums">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>781</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>391</width>
+       <height>501</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>До</string>
+     </property>
+     <widget class="QListWidget" name="lwJurNums_Before">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>371</width>
+        <height>461</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>70</y>
+       <width>401</width>
+       <height>501</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>После</string>
+     </property>
+     <widget class="QListWidget" name="lwJurNums_After">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>381</width>
+        <height>461</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="gbControl">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>600</y>
+      <width>521</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Управление</string>
+    </property>
+    <widget class="QLineEdit" name="leTotalJournals">
+     <property name="geometry">
+      <rect>
+       <x>73</x>
+       <y>20</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblTotalJournals">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>24</y>
+       <width>59</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Всего:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblCurrentJournal">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>24</y>
+       <width>71</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Текущий:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leCurrentJournal">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>20</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbBegin">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>70</y>
+       <width>71</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Начало</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbLeft">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>70</y>
+       <width>71</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&lt;==</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbRight">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>70</y>
+       <width>71</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>==&gt;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbEnd">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>70</y>
+       <width>71</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Конец</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leTotalNums">
+     <property name="geometry">
+      <rect>
+       <x>73</x>
+       <y>40</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1361</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
