@@ -44,7 +44,9 @@ private:
     
     void loadJursList();
     void loadNumsList();
+    void loadNum_Before();
     void loadRecord();
+    void loadRecord_num();
     
 
 private slots:
@@ -52,7 +54,8 @@ private slots:
     void slot_pbLeft();
     void slot_pbRight();
     void slot_pbEnd();
-    void slot_choseByTitle(QString);
+    void slot_jrnChoseByTitle(QString);
+    void slot_numsChoseByTitle(QString);
 };
 
 #endif	/* _FORMCKC_H */

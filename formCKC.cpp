@@ -6,6 +6,7 @@
  */
 
 #include "formCKC.h"
+#include "parser.h"
 
 formCKC::formCKC() {
     frmCKC.setupUi(this);
@@ -13,7 +14,8 @@ formCKC::formCKC() {
     connect(frmCKC.pbLeft, SIGNAL(clicked()), this, SLOT(slot_pbLeft()));
     connect(frmCKC.pbRight, SIGNAL(clicked()), this, SLOT(slot_pbRight()));
     connect(frmCKC.pbEnd, SIGNAL(clicked()), this, SLOT(slot_pbEnd()));
-    connect(frmCKC.cbJournals, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_choseByTitle(QString)));
+    connect(frmCKC.cbJournals, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_jrnChoseByTitle(QString)));
+    connect(frmCKC.cbJurNums, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_numsChoseByTitle(QString)));
     
     searchAndLoadBDFiles();
 }
@@ -126,9 +128,15 @@ void formCKC::loadRecord()
         frmCKC.lwJournals->addItem(QString::fromStdString(itJurs_fld->data()));
         itJurs_fld++;
     }
+    itJurs_fld = itJurs->fld_v909.begin();
+    while (itJurs_fld != itJurs->fld_v909.end())
+    {
+        frmCKC.lwJournals->addItem("#909: " + QString::fromStdString(itJurs_fld->data()));
+        itJurs_fld++;
+    }
 }
 
-void formCKC::slot_choseByTitle(QString title)
+void formCKC::slot_jrnChoseByTitle(QString title)
 {
     itJurs_setBegin();
     engn.currentRec = 1;
@@ -158,7 +166,6 @@ void formCKC::loadNumsList()
             vector<jurnum>::const_iterator  itNums = engn.jurnums.begin();
             while (itNums != engn.jurnums.end())
             {
-                cout << itNums->cifer_jurnum << "   ::   " << itJursNums->cifer << endl;
                 if (itNums->cifer == itJursNums->cifer)
                 {
                     frmCKC.cbJurNums->addItem(QString::fromStdString(itNums->cifer_jurnum));
@@ -170,4 +177,46 @@ void formCKC::loadNumsList()
         
         itJursNums++;
     }
+}
+
+void formCKC::slot_numsChoseByTitle(QString title) 
+{
+    itNums = engn.jurnums.begin();
+    while (itNums != engn.jurnums.end())
+    {
+        if (itNums->cifer_jurnum == title.toStdString())
+        {
+            loadNum_Before();
+            break;
+        }
+        itNums++;
+    }
+    
+//    loadNum_Before();
+}
+
+void formCKC::loadNum_Before() 
+{
+    frmCKC.lwJurNums_Before->clear();
+    frmCKC.lwJurNums_After->clear();
+    frmCKC.lwJurNums_Before->addItem("#933: " + QString::fromStdString(itNums->cifer));
+    frmCKC.lwJurNums_After->addItem("#933: " + QString::fromStdString(itNums->cifer));
+    frmCKC.lwJurNums_Before->addItem("#903: " + QString::fromStdString(itNums->cifer_jurnum));
+    frmCKC.lwJurNums_After->addItem("#903: " + QString::fromStdString(itNums->cifer_jurnum));
+    vector<string>::const_iterator it = itNums->fld_v910.begin();
+    while (it != itNums->fld_v910.end())
+    {
+        frmCKC.lwJurNums_Before->addItem("#910: " + QString::fromStdString(it->data()));
+        parser pars;
+        frmCKC.lwJurNums_After->addItem("#910: " + QString::fromStdString(pars.replaceCodDivision(it->data())));
+        it++;
+    }
+    it = itNums->restFields.begin();
+    while (it != itNums->restFields.end())
+    {
+        frmCKC.lwJurNums_Before->addItem(QString::fromStdString(it->data()));
+        frmCKC.lwJurNums_After->addItem(QString::fromStdString(it->data()));
+        it++;
+    }
+    
 }

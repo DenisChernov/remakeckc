@@ -17,7 +17,7 @@
 
 using namespace std;
 
-enum FIELD_CODE {REST_FIELD, FIELD_909, FIELD_910, FIELD_CIFER, FIELD_CIFER_NUM, FIELD_TITLE};
+enum FIELD_CODE {REST_FIELD, FIELD_909, FIELD_910, FIELD_CIFER, FIELD_CIFER_NUM, FIELD_CIFER_JUR, FIELD_TITLE, FIELD_REMOVE};
 
 class parser {
 public:
@@ -33,8 +33,12 @@ public:
     string getCifer(string line);
     string getCifer_jur(string line);
     
+    string replaceCodDivision(string line);
+    string getDivision(string line);
+    
 private:
-
+    map<string, string> idFilials;
+    map<string, string> idMonths;
 };
 
 
