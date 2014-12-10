@@ -44,9 +44,9 @@ private:
     
     void loadJursList();
     void loadNumsList();
-    void loadNum_Before();
+    void loadNum();
     void loadRecord();
-    void loadRecord_num();
+
     
 
 private slots:

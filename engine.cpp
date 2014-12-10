@@ -122,6 +122,7 @@ void engine::loadBDFile(string filename) {
 
 vector<string> engine::readRecord() 
 {
+    parser pars;
     vector<string> record;
     string line;
     if (f.isOpen_read())
@@ -129,7 +130,7 @@ vector<string> engine::readRecord()
         f.readline(&line);
         while (line.find("*****") == string::npos)
         {
-            record.push_back(line.length() > 0 ? line.replace(line.length() - 1, 1, "") : line);
+            record.push_back(pars.replaceMonthByNumbers(line.length() > 0 ? line.replace(line.length() - 1, 1, "") : line));
             f.readline(&line);
         }
         

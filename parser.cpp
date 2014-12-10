@@ -6,6 +6,7 @@
  */
 
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "parser.h"
 
@@ -49,6 +50,19 @@ parser::parser() {
     idMonths["октябрь"]     = "10";
     idMonths["ноябрь"]      = "11";
     idMonths["декабрь"]     = "12";
+    
+    /* оооочень плохое решение */
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; 
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; 
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; 
+    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
+    
 }
 
 parser::~parser() {
@@ -56,7 +70,7 @@ parser::~parser() {
 
 pair<FIELD_CODE, string> parser::checkFld(string line) 
 {
-    boost::regex re(".*(#200:|#909:|#903:|#933:|#910:|#907:).*");
+    boost::regex re(".*(#200:|#909:|#903:|#933:|#910:|#907:|#1005:).*");
     boost::smatch result;
     boost::regex_search(line ,result, re);
 
@@ -76,7 +90,7 @@ pair<FIELD_CODE, string> parser::checkFld(string line)
         else
         if (result[1] == "#910:")
             return make_pair(FIELD_910, line);  
-        if (result[1] == "#907:")
+        if (result[1] == "#907:" || result[1] == "#1005:")
             return make_pair(FIELD_REMOVE, line);  
         
     }
@@ -142,4 +156,196 @@ string parser::getDivision(string line)
     boost::regex_search(line, result, re);
     
     return result[1];
+}
+
+string parser::getNumber(string line) 
+{
+    //#903: Сме/2009/3
+    boost::regex re(".*/*/(\\d{1,3})");
+    boost::smatch result;
+    boost::regex_search(line, result, re);
+            
+    return result[1];
+}
+
+string parser::getYear(string line) 
+{
+    boost::regex re(".*(C|Q)(\\d{4}).*");
+    boost::smatch result;
+    boost::regex_search(line, result, re);
+    
+    return result[2];
+}
+
+string parser::getRange(string line) 
+{
+    boost::regex re("");
+    boost::smatch result;
+    boost::regex_search(line, result, re);
+    
+    return result[1];
+}
+
+void parser::printRange(vector<string> range) 
+{
+    vector<string>::const_iterator it = range.begin();
+    while (it != range.end())
+    {
+        cout << it->data() << ", ";
+        it++;
+    }
+    cout << endl;
+}
+
+
+string parser::remakeRange(string line) 
+{
+    vector<string> range;
+    vector<string> tmpRange;
+    string newRange = line;
+    cout << "исходный: " << newRange << endl;
+    boost::replace_all(newRange, " ", "");
+    boost::replace_all(newRange, "(с/в)", "");
+    boost::replace_all(newRange, "с/в", "");
+    boost::replace_all(newRange, "спец.", "");        
+    boost::replace_all(newRange, "№", ",");
+    cout << "после замены: " << newRange << endl;    
+    // объединение диапозонов
+
+    
+    boost::regex re_range("(\\d{1,3})-(\\d{1,3})");
+    boost::smatch result;
+    boost::regex_search(newRange, result, re_range);
+    range.clear();
+    for (size_t i = boost::lexical_cast<size_t>(result[1]); i <= boost::lexical_cast<size_t>(result[2]); i++)
+    {
+        range.push_back(boost::lexical_cast<string>(i));
+    }
+
+    cout<< "reparsed: " << range.front().data() << "-" << range.back().data() << endl;
+    printRange(range);
+    cout << "******" <<endl;
+    string::const_iterator start = newRange.begin();
+    string::const_iterator stop =  newRange.end();
+    while (boost::regex_search(start, stop, result, re_range))
+    {
+        tmpRange.clear();
+        cout << result[1] << " : " << result[2] << endl;
+        for (size_t i = boost::lexical_cast<size_t>(result[1]); i <= boost::lexical_cast<size_t>(result[2]); i++)
+        {
+            vector<string>::const_iterator it = range.begin();
+            bool inRange = false;
+            cout << i << endl;
+            while (it != range.end())
+            {
+                
+                if (boost::lexical_cast<string>(i) == it->data())
+                {
+                    inRange = true;
+                    break;
+                }
+                
+                it++;
+            }
+            if (!inRange)
+            {
+                
+                tmpRange.push_back(boost::lexical_cast<string>(i));
+            }
+            
+        }
+        cout << "tmpRange: "; printRange(tmpRange); cout<< endl;
+        
+        
+        for (size_t pos = 0; pos < tmpRange.size(); pos++)
+            range.push_back(tmpRange.at(pos));
+        
+        printRange(range);
+        
+        start = result[2].second;        
+    }
+   
+    start = newRange.begin();
+    stop =  newRange.end();
+    boost::regex re_single("([0-9\\-]*)(,)");
+    tmpRange.clear();
+    while (boost::regex_search(start, stop, result, re_single))
+    {
+        start = result[2].second;     
+        if (boost::lexical_cast<string>(result[1]).find_first_of("-", 0) != string::npos)
+            continue;
+
+        vector<string>::const_iterator it = range.begin();
+        bool inRange = false;
+        while (it != range.end())
+        {
+              
+            if (boost::lexical_cast<string>(result[1]) == it->data())
+            {
+                inRange = true;
+                break;
+            }
+                
+            it++;
+        }
+        if (!inRange)
+        {
+            tmpRange.push_back(boost::lexical_cast<string>(result[1]));
+        }
+           
+    }    
+    for (size_t pos = 0; pos < tmpRange.size(); pos++)
+    {
+        vector<string>::const_iterator it = range.begin();
+        bool dublicate = false;
+        while (it != range.end())
+        {
+            if (it->data() == tmpRange.at(pos))
+            {
+                dublicate = true;
+                break;
+            }
+            it++;
+        }
+        if (!dublicate)
+            range.push_back(tmpRange.at(pos));
+    }
+    
+    
+    newRange = "";
+    vector<string>::const_iterator it = range.begin();
+    while (it != range.end())
+    {
+        newRange += it->data();
+        it++;
+        if (it != range.end())
+            newRange += ",";
+    }
+    
+    return newRange;
+}
+
+string parser::replaceMonthByNumbers(string line) 
+{
+    boost::regex re(".*(#909:).*");
+    boost::smatch result;
+    boost::regex_search(line ,result, re);
+    if (result[1] != "")
+    {
+        
+        map<string, string>::const_iterator it = idMonths.begin();
+        while (it != idMonths.end())
+        {
+            boost::replace_all(line, it->first, it->second);
+            it++;
+        }
+    }
+    return line;
+}
+
+string parser::to_lower(string line) 
+{
+    
+    
+    return line;
 }

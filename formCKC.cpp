@@ -186,7 +186,7 @@ void formCKC::slot_numsChoseByTitle(QString title)
     {
         if (itNums->cifer_jurnum == title.toStdString())
         {
-            loadNum_Before();
+            loadNum();
             break;
         }
         itNums++;
@@ -195,22 +195,40 @@ void formCKC::slot_numsChoseByTitle(QString title)
 //    loadNum_Before();
 }
 
-void formCKC::loadNum_Before() 
+void formCKC::loadNum() 
 {
+    parser pars;
     frmCKC.lwJurNums_Before->clear();
     frmCKC.lwJurNums_After->clear();
     frmCKC.lwJurNums_Before->addItem("#933: " + QString::fromStdString(itNums->cifer));
     frmCKC.lwJurNums_After->addItem("#933: " + QString::fromStdString(itNums->cifer));
     frmCKC.lwJurNums_Before->addItem("#903: " + QString::fromStdString(itNums->cifer_jurnum));
     frmCKC.lwJurNums_After->addItem("#903: " + QString::fromStdString(itNums->cifer_jurnum));
+    
+    
+    
     vector<string>::const_iterator it = itNums->fld_v910.begin();
     while (it != itNums->fld_v910.end())
     {
         frmCKC.lwJurNums_Before->addItem("#910: " + QString::fromStdString(it->data()));
-        parser pars;
         frmCKC.lwJurNums_After->addItem("#910: " + QString::fromStdString(pars.replaceCodDivision(it->data())));
+        
+        
+        vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
+        while (it909 != itJurs->fld_v909.end())
+        {
+//            cout << pars.getNumber(itNums->cifer_jurnum) << endl;
+//            cout << pars.getDivision(it->data()) << endl;
+//            cout << pars.getYear(it->data()) << endl;
+//            cout << pars.getYear(it909->data()) << endl;
+        
+            it909++;
+        }
+
+        
         it++;
     }
+    
     it = itNums->restFields.begin();
     while (it != itNums->restFields.end())
     {
@@ -218,5 +236,9 @@ void formCKC::loadNum_Before()
         frmCKC.lwJurNums_After->addItem(QString::fromStdString(it->data()));
         it++;
     }
+
+    
+
+
     
 }

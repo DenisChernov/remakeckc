@@ -14,6 +14,7 @@
 #include <map>
 #include <boost/regex.hpp>
 #include "msgs.h"
+#include <boost/algorithm/string.hpp> 
 
 using namespace std;
 
@@ -33,12 +34,23 @@ public:
     string getCifer(string line);
     string getCifer_jur(string line);
     
-    string replaceCodDivision(string line);
-    string getDivision(string line);
     
+    string getNumber(string line);
+    string getDivision(string line);
+    string getYear(string line);
+    string getRange(string line);
+    
+    string replaceCodDivision(string line);
+    string remakeRange(string line);
+    string replaceMonthByNumbers(string line);
+    
+    string to_lower(string line);
 private:
     map<string, string> idFilials;
     map<string, string> idMonths;
+    map<string, string> idChars;
+    
+    void printRange(vector<string> range);
 };
 
 
