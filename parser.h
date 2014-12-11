@@ -14,7 +14,7 @@
 #include <map>
 #include <boost/regex.hpp>
 #include "msgs.h"
-#include <boost/algorithm/string.hpp> 
+
 
 using namespace std;
 
@@ -30,6 +30,7 @@ public:
     pair<FIELD_CODE, string> checkFld(string line);
     string getTitle(string line);
     string getAccum_jur(string line);
+    string getAccum_jur_h(string line);
     string getAccum_num(string line);
     string getCifer(string line);
     string getCifer_jur(string line);
@@ -42,9 +43,8 @@ public:
     
     string replaceCodDivision(string line);
     string remakeRange(string line);
-    string replaceMonthByNumbers(string line);
+
     
-    string to_lower(string line);
 private:
     map<string, string> idFilials;
     map<string, string> idMonths;

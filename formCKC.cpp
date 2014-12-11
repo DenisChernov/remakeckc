@@ -16,7 +16,7 @@ formCKC::formCKC() {
     connect(frmCKC.pbEnd, SIGNAL(clicked()), this, SLOT(slot_pbEnd()));
     connect(frmCKC.cbJournals, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_jrnChoseByTitle(QString)));
     connect(frmCKC.cbJurNums, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_numsChoseByTitle(QString)));
-    
+    connect(frmCKC.lwJournals, SIGNAL(currentRowChanged(int)), this, SLOT(slot_lwrowChanged(int)));
     searchAndLoadBDFiles();
 }
 
@@ -212,16 +212,16 @@ void formCKC::loadNum()
     {
         frmCKC.lwJurNums_Before->addItem("#910: " + QString::fromStdString(it->data()));
         frmCKC.lwJurNums_After->addItem("#910: " + QString::fromStdString(pars.replaceCodDivision(it->data())));
-        
-        
         vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
         while (it909 != itJurs->fld_v909.end())
         {
-//            cout << pars.getNumber(itNums->cifer_jurnum) << endl;
-//            cout << pars.getDivision(it->data()) << endl;
-//            cout << pars.getYear(it->data()) << endl;
-//            cout << pars.getYear(it909->data()) << endl;
-        
+            cout << "nums: " << pars.getNumber(itNums->cifer_jurnum) << endl;
+            cout << "nums: " << pars.getDivision(it->data()) << endl;
+            cout << "jur: " << pars.getYear(it909->data()) << endl;
+            cout << it909->data() << endl;
+            cout << pars.remakeRange(pars.getAccum_jur_h(it909->data())) << endl;
+
+            cout << "******" << endl;
             it909++;
         }
 
@@ -241,4 +241,27 @@ void formCKC::loadNum()
 
 
     
+}
+
+void formCKC::slot_lwrowChanged(int row) 
+{
+ /*   parser pars;
+    pair<FIELD_CODE, string> result = pars.checkFld(frmCKC.lwJournals->item(row)->text().toStdString());
+    switch (result.first)
+    {
+        case  FIELD_909:
+        {
+            //cout << result.second << endl;
+            //TODO:
+            // какую нить обработку и действие на это
+            
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        
+    }
+  */ 
 }

@@ -56,6 +56,7 @@ private slots:
     void slot_pbEnd();
     void slot_jrnChoseByTitle(QString);
     void slot_numsChoseByTitle(QString);
+    void slot_lwrowChanged(int);
 };
 
 #endif	/* _FORMCKC_H */

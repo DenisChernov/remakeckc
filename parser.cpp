@@ -35,34 +35,25 @@ parser::parser() {
     idFilials["ЦГБ СБО"]    = "29";
     idFilials["ЦГБ ЦКХ"]    = "30";
     idFilials["ЦГБ ОКЛ"]    = "31";
-    
-    idMonths["январь"]      = "1";
-    idMonths["февраль"]     = "2";
-    idMonths["февр"]        = "2";
-    idMonths["март"]        = "3";
-    idMonths["апрель"]      = "4";
-    idMonths["апр"]         = "4";
-    idMonths["май"]         = "5";
-    idMonths["июнь"]        = "6";
-    idMonths["июль"]        = "7";
-    idMonths["август"]      = "8";
-    idMonths["сентябрь"]    = "9";
-    idMonths["октябрь"]     = "10";
-    idMonths["ноябрь"]      = "11";
-    idMonths["декабрь"]     = "12";
-    
-    /* оооочень плохое решение */
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; 
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; 
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а"; 
-    idChars["А"] = "а"; idChars["А"] = "а"; idChars["А"] = "а";
-    
+    idFilials["Ф 1"]        = "1";
+    idFilials["Ф 2"]        = "2";
+    idFilials["Ф 3"]        = "3";
+    idFilials["Ф 4"]        = "4";
+    idFilials["Ф 5"]        = "5";
+    idFilials["Ф 6"]        = "6";
+    idFilials["Ф 7"]        = "7";
+    idFilials["Ф 8"]        = "8";
+    idFilials["Ф 9"]        = "9";
+    idFilials["Ф 10"]       = "10";
+    idFilials["Ф 11"]       = "11";
+    idFilials["Ф 14"]       = "14";
+    idFilials["Ф 15"]       = "15";
+    idFilials["Ф 22"]       = "22";
+    idFilials["Ф 23"]       = "23";
+    idFilials["Ф 24"]       = "24";
+    idFilials["Ф 25"]       = "25";
+    idFilials["Ф 26"]       = "11";
+
 }
 
 parser::~parser() {
@@ -109,6 +100,14 @@ string parser::getTitle(string line)
 string parser::getAccum_jur(string line) 
 {
     boost::regex re("#909: (.*)");
+    boost::smatch result;
+    boost::regex_search(line, result, re);
+    return result[1];
+}
+
+string parser::getAccum_jur_h(string line) 
+{
+    boost::regex re(".*\\^[Hh]([0-9\\-/,]*).*");
     boost::smatch result;
     boost::regex_search(line, result, re);
     return result[1];
@@ -161,7 +160,7 @@ string parser::getDivision(string line)
 string parser::getNumber(string line) 
 {
     //#903: Сме/2009/3
-    boost::regex re(".*/*/(\\d{1,3})");
+    boost::regex re(".*/\\d{4}/([0-9/]*)");
     boost::smatch result;
     boost::regex_search(line, result, re);
             
@@ -323,29 +322,4 @@ string parser::remakeRange(string line)
     }
     
     return newRange;
-}
-
-string parser::replaceMonthByNumbers(string line) 
-{
-    boost::regex re(".*(#909:).*");
-    boost::smatch result;
-    boost::regex_search(line ,result, re);
-    if (result[1] != "")
-    {
-        
-        map<string, string>::const_iterator it = idMonths.begin();
-        while (it != idMonths.end())
-        {
-            boost::replace_all(line, it->first, it->second);
-            it++;
-        }
-    }
-    return line;
-}
-
-string parser::to_lower(string line) 
-{
-    
-    
-    return line;
 }
