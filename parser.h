@@ -42,13 +42,16 @@ public:
     string getRange(string line);
     
     string replaceCodDivision(string line);
-    string remakeRange(string line);
+    vector<string> remakeRange(string line);
 
+    string filialToNumber(string line)
+    {
+        return idFilials[line];
+    };
     
 private:
     map<string, string> idFilials;
     map<string, string> idMonths;
-    map<string, string> idChars;
     
     void printRange(vector<string> range);
 };

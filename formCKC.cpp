@@ -205,7 +205,38 @@ void formCKC::loadNum()
     frmCKC.lwJurNums_Before->addItem("#903: " + QString::fromStdString(itNums->cifer_jurnum));
     frmCKC.lwJurNums_After->addItem("#903: " + QString::fromStdString(itNums->cifer_jurnum));
     
-    
+    if (itNums->fld_v910.size() == 0)
+    {
+        cout << "заполняем" << endl;
+        vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
+        while (it909 != itJurs->fld_v909.end())
+        {
+            cout << pars.getYear(it909->data()) << "              " << pars.getYear(itNums->cifer_jurnum) << endl;
+            if (pars.getYear(it909->data()) == pars.getYear(itNums->cifer_jurnum))
+            {
+                vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
+                vector<string>::const_iterator itRange = range.begin();
+                bool inRange = false;
+                while (itRange != range.end())
+                {
+                    if (itRange->data() == pars.getNumber(itNums->cifer_jurnum))
+                    {
+                        inRange = true;
+                        break;
+                    }
+                    itRange++;
+                }
+                if (inRange)
+                {
+                    string line = "#910: ^A0^B" + pars.filialToNumber(pars.getYear(itNums->cifer_jurnum)) +"^C" + pars.getYear(it909->data()) + "^D" + pars.getDivision(it909->data());
+                    frmCKC.lwJurNums_After->addItem(QString::fromStdString("add - " + line));
+                }
+            }
+            
+            it909++;
+        }
+    }        
+        
     
     vector<string>::const_iterator it = itNums->fld_v910.begin();
     while (it != itNums->fld_v910.end())
@@ -215,18 +246,46 @@ void formCKC::loadNum()
         vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
         while (it909 != itJurs->fld_v909.end())
         {
-            cout << "nums: " << pars.getNumber(itNums->cifer_jurnum) << endl;
-            cout << "nums: " << pars.getDivision(it->data()) << endl;
-            cout << "jur: " << pars.getYear(it909->data()) << endl;
-            cout << it909->data() << endl;
-            cout << pars.remakeRange(pars.getAccum_jur_h(it909->data())) << endl;
 
-            cout << "******" << endl;
+ //           cout << "nums: " << pars.getNumber(itNums->cifer_jurnum) << endl;
+  //          cout << "nums: " << pars.getDivision(it->data()) << endl;
+  //          cout << "jur: " << pars.getYear(it909->data()) << endl;
+  //          cout << it909->data() << endl;
+//            if (pars.getYear(it909->data()) != "")
+//                cout << pars.remakeRange(pars.getAccum_jur_h(it909->data())) << endl;
+  
+            // ^A0^B4^C2012^Dф 4
+            vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
+            vector<string>::const_iterator itRange = range.begin();
+            string line = "#910: ^A0^B" + pars.filialToNumber(pars.getDivision(it->data())) +
+                                "^C" + pars.getYear(it->data()) + "^D" + pars.getDivision(it->data());
+            
+            //cout << it909->data() << endl;
+            
+            if (pars.getYear(it->data()) == pars.getYear(it909->data()))
+            {
+                //cout << "-- " << pars.getNumber(itNums->cifer_jurnum) << endl;
+                while (itRange != range.end())
+                {
+                    //cout << "----- " << itRange->data() << endl;
+                    if (itRange->data() == pars.getNumber(itNums->cifer_jurnum))
+                        break;
+                    if ("#910: " + pars.replaceCodDivision(it->data()) == line)
+                        break;
+                    frmCKC.lwJurNums_After->addItem(QString::fromStdString("add - " + line));
+                    itRange++;
+                }
+            
+            }        
+ //           cout << "******" << endl;
+
             it909++;
+
         }
 
-        
+
         it++;
+        
     }
     
     it = itNums->restFields.begin();
@@ -237,10 +296,6 @@ void formCKC::loadNum()
         it++;
     }
 
-    
-
-
-    
 }
 
 void formCKC::slot_lwrowChanged(int row) 
