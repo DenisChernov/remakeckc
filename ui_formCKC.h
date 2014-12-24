@@ -50,6 +50,9 @@ public:
     QPushButton *pbRight;
     QPushButton *pbEnd;
     QLineEdit *leTotalNums;
+    QGroupBox *gbFlush;
+    QPushButton *pbFlushJournals;
+    QPushButton *pbFlushNumbers;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -120,6 +123,15 @@ public:
         leTotalNums = new QLineEdit(gbControl);
         leTotalNums->setObjectName(QStringLiteral("leTotalNums"));
         leTotalNums->setGeometry(QRect(73, 40, 113, 23));
+        gbFlush = new QGroupBox(centralwidget);
+        gbFlush->setObjectName(QStringLiteral("gbFlush"));
+        gbFlush->setGeometry(QRect(540, 600, 401, 91));
+        pbFlushJournals = new QPushButton(gbFlush);
+        pbFlushJournals->setObjectName(QStringLiteral("pbFlushJournals"));
+        pbFlushJournals->setGeometry(QRect(30, 40, 151, 24));
+        pbFlushNumbers = new QPushButton(gbFlush);
+        pbFlushNumbers->setObjectName(QStringLiteral("pbFlushNumbers"));
+        pbFlushNumbers->setGeometry(QRect(220, 40, 151, 24));
         formCKC->setCentralWidget(centralwidget);
         menubar = new QMenuBar(formCKC);
         menubar->setObjectName(QStringLiteral("menubar"));
@@ -148,6 +160,9 @@ public:
         pbLeft->setText(QApplication::translate("formCKC", "<==", 0));
         pbRight->setText(QApplication::translate("formCKC", "==>", 0));
         pbEnd->setText(QApplication::translate("formCKC", "\320\232\320\276\320\275\320\265\321\206", 0));
+        gbFlush->setTitle(QApplication::translate("formCKC", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \321\204\320\260\320\271\320\273\321\213", 0));
+        pbFlushJournals->setText(QApplication::translate("formCKC", "\320\226\321\203\321\200\320\275\320\260\320\273\321\213", 0));
+        pbFlushNumbers->setText(QApplication::translate("formCKC", "\320\235\320\276\320\274\320\265\321\200\320\260", 0));
     } // retranslateUi
 
 };

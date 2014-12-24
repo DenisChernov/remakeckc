@@ -49,6 +49,8 @@ public:
         return idFilials[line];
     };
     
+    string replaceRange(string line);
+    
 private:
     map<string, string> idFilials;
     map<string, string> idMonths;

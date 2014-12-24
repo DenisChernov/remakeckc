@@ -47,6 +47,7 @@ private:
     void loadNum();
     void loadRecord();
 
+
     
 
 private slots:
@@ -57,6 +58,8 @@ private slots:
     void slot_jrnChoseByTitle(QString);
     void slot_numsChoseByTitle(QString);
     void slot_lwrowChanged(int);
+    void slot_flushJournals();
+    void slot_flushNumbers();
 };
 
 #endif	/* _FORMCKC_H */

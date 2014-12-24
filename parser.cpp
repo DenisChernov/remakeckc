@@ -205,17 +205,21 @@ void parser::printRange(vector<string> range)
 vector<string> parser::remakeRange(string line) 
 {
     vector<string> range;
+    range.clear();
     vector<string> tmpRange;
     string newRange = line;
-
-    //cout << "исходный: " << newRange << endl;
+  
+    if (line.length() <= 1)
+        return range;
+    
+//    cout << "исходный: " << newRange << endl;
     boost::replace_all(newRange, " ", "");
     boost::replace_all(newRange, "(с/в)", "");
     boost::replace_all(newRange, "с/в", "");
     boost::replace_all(newRange, "спец.", "");        
     boost::replace_all(newRange, "№", ",");
     boost::replace_all(newRange, ":", "");
-    //cout << "после замены: " << newRange << endl;    
+//    cout << "после замены: " << newRange << endl;    
     // объединение диапозонов
 
     
@@ -237,7 +241,7 @@ vector<string> parser::remakeRange(string line)
         range.push_back(boost::lexical_cast<string>(i));
     }
 
-    //cout<< "reparsed: " << range.front().data() << "-" << range.back().data() << endl;
+//    cout<< "reparsed: " << range.front().data() << "-" << range.back().data() << endl;
   //  printRange(range);
     //cout << "******" <<endl;
     string::const_iterator start = newRange.begin();
@@ -282,6 +286,7 @@ vector<string> parser::remakeRange(string line)
             start = result[2].second;        
         }
     }
+    
     start = newRange.begin();
     stop =  newRange.end();
     boost::regex re_single("([0-9\\-]*)(,)");
@@ -343,3 +348,26 @@ vector<string> parser::remakeRange(string line)
     return range;
 }
 
+string parser::replaceRange(string line) 
+{
+    vector<string> newRange = remakeRange(getAccum_jur_h(line));
+    
+    boost::regex re(".*(\\^[Hh].*)\\^[Kk].*");
+    boost::smatch result;
+    boost::regex_search(line, result, re);
+//    cout << "line: " << line << endl;
+//    cout << result[1] << endl;
+    boost::replace_all(line ,string(result[1]), "");
+//    cout << "new line: " << line << endl;
+    line += "^H";
+    
+    vector<string>::const_iterator it = newRange.begin();
+    while (it != newRange.end())
+    {
+//        cout << it->data() << endl;
+        line += string(it->data());
+        line += ",";
+        it++;
+    }
+    return line;
+}

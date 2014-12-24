@@ -14,14 +14,19 @@ formCKC::formCKC() {
     connect(frmCKC.pbLeft, SIGNAL(clicked()), this, SLOT(slot_pbLeft()));
     connect(frmCKC.pbRight, SIGNAL(clicked()), this, SLOT(slot_pbRight()));
     connect(frmCKC.pbEnd, SIGNAL(clicked()), this, SLOT(slot_pbEnd()));
+    connect(frmCKC.pbFlushJournals, SIGNAL(clicked()), this, SLOT(slot_flushJournals()));
+    connect(frmCKC.pbFlushNumbers, SIGNAL(clicked()), this, SLOT(slot_flushNumbers()));
     connect(frmCKC.cbJournals, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_jrnChoseByTitle(QString)));
     connect(frmCKC.cbJurNums, SIGNAL(currentIndexChanged(QString)), this, SLOT(slot_numsChoseByTitle(QString)));
     connect(frmCKC.lwJournals, SIGNAL(currentRowChanged(int)), this, SLOT(slot_lwrowChanged(int)));
     searchAndLoadBDFiles();
+
 }
 
 formCKC::~formCKC() {
 }
+
+
 
 void formCKC::searchAndLoadBDFiles() 
 {
@@ -207,31 +212,31 @@ void formCKC::loadNum()
     
     if (itNums->fld_v910.size() == 0)
     {
-        cout << "заполняем" << endl;
+//        cout << "заполняем" << endl;
         vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
         while (it909 != itJurs->fld_v909.end())
         {
-            cout << pars.getYear(it909->data()) << "              " << pars.getYear(itNums->cifer_jurnum) << endl;
-            if (pars.getYear(it909->data()) == pars.getYear(itNums->cifer_jurnum))
-            {
-                vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
-                vector<string>::const_iterator itRange = range.begin();
-                bool inRange = false;
-                while (itRange != range.end())
+//            cout << pars.getYear(it909->data()) << "              " << pars.getYear(itNums->cifer_jurnum) << endl;
+                if (pars.getYear(it909->data()) == pars.getYear(itNums->cifer_jurnum))
                 {
-                    if (itRange->data() == pars.getNumber(itNums->cifer_jurnum))
-                    {
-                        inRange = true;
-                        break;
-                    }
-                    itRange++;
+                        vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
+                        vector<string>::const_iterator itRange = range.begin();
+                        bool inRange = false;
+                        while (itRange != range.end())
+                        {
+                                if (itRange->data() == pars.getNumber(itNums->cifer_jurnum))
+                                {
+                                        inRange = true;
+                                        break;
+                                }
+                                itRange++;
+                        }
+                        if (inRange)
+                        {
+                            string line = "#910: ^A0^B" + pars.filialToNumber(pars.getYear(itNums->cifer_jurnum)) +"^C" + pars.getYear(it909->data()) + "^D" + pars.getDivision(it909->data());
+                            frmCKC.lwJurNums_After->addItem(QString::fromStdString("add - " + line));
+                        }
                 }
-                if (inRange)
-                {
-                    string line = "#910: ^A0^B" + pars.filialToNumber(pars.getYear(itNums->cifer_jurnum)) +"^C" + pars.getYear(it909->data()) + "^D" + pars.getDivision(it909->data());
-                    frmCKC.lwJurNums_After->addItem(QString::fromStdString("add - " + line));
-                }
-            }
             
             it909++;
         }
@@ -244,36 +249,37 @@ void formCKC::loadNum()
         frmCKC.lwJurNums_Before->addItem("#910: " + QString::fromStdString(it->data()));
         frmCKC.lwJurNums_After->addItem("#910: " + QString::fromStdString(pars.replaceCodDivision(it->data())));
         vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
+        bool alreadyIn = false;
+        string line = "#910: ^A0^B" + pars.filialToNumber(pars.getDivision(it->data())) +
+                                "^C" + pars.getYear(it->data()) + "^D" + pars.getDivision(it->data());        
         while (it909 != itJurs->fld_v909.end())
         {
 
- //           cout << "nums: " << pars.getNumber(itNums->cifer_jurnum) << endl;
-  //          cout << "nums: " << pars.getDivision(it->data()) << endl;
-  //          cout << "jur: " << pars.getYear(it909->data()) << endl;
-  //          cout << it909->data() << endl;
-//            if (pars.getYear(it909->data()) != "")
-//                cout << pars.remakeRange(pars.getAccum_jur_h(it909->data())) << endl;
-  
-            // ^A0^B4^C2012^Dф 4
             vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
             vector<string>::const_iterator itRange = range.begin();
-            string line = "#910: ^A0^B" + pars.filialToNumber(pars.getDivision(it->data())) +
-                                "^C" + pars.getYear(it->data()) + "^D" + pars.getDivision(it->data());
+
             
-            //cout << it909->data() << endl;
-            
-            if (pars.getYear(it->data()) == pars.getYear(it909->data()))
+            if (pars.getYear(it909->data()) == pars.getYear(it->data()))
             {
-                //cout << "-- " << pars.getNumber(itNums->cifer_jurnum) << endl;
+                bool inRange = false;
                 while (itRange != range.end())
                 {
-                    //cout << "----- " << itRange->data() << endl;
                     if (itRange->data() == pars.getNumber(itNums->cifer_jurnum))
+                    {
+                        inRange = true;
                         break;
-                    if ("#910: " + pars.replaceCodDivision(it->data()) == line)
-                        break;
-                    frmCKC.lwJurNums_After->addItem(QString::fromStdString("add - " + line));
-                    itRange++;
+                     }
+                     itRange++;
+                }
+                if (inRange)
+               {
+
+//                    cout << "----- из журнала: " << it909->data() << "\nиз номера: " << pars.getNumber(itNums->cifer_jurnum) << "                       строка в номере: " << it->data() << endl;
+                    string jrnLine = "^A0^B" + pars.filialToNumber(pars.getDivision(it909->data()))  + "^C" + pars.getYear(it909->data()) + "^D" + pars.getDivision(it909->data());
+//                    cout << jrnLine << "                           " << it->data() << endl;
+                    if (jrnLine == it->data())
+                        alreadyIn = true;
+                    
                 }
             
             }        
@@ -282,7 +288,8 @@ void formCKC::loadNum()
             it909++;
 
         }
-
+        if (!alreadyIn)
+                        frmCKC.lwJurNums_After->addItem(QString::fromStdString("add - " + line));
 
         it++;
         
@@ -320,3 +327,162 @@ void formCKC::slot_lwrowChanged(int row)
     }
   */ 
 }
+
+void formCKC::slot_flushJournals() 
+{
+    msgs msg;
+    parser pars;
+    msg.print(EINFO, "Начинаю сбрасывать журналы");
+    f.fWOpen("jrn_new.txt");
+    vector<jur>::const_iterator itFlush =  engn.jurs.begin();
+    while (itFlush != engn.jurs.end())
+    {
+        f.writeLine("#200: ^A" + itFlush->title + "\r");
+        f.writeLine("#903: " + itFlush->cifer + "\r");
+        vector<string>::const_iterator it = itFlush->cifer_month_jurnum.begin();
+        while(it != itFlush->cifer_month_jurnum.end())
+        {
+            f.writeLine(string(it->data()) + "\r");
+            it++;
+        }
+
+        it = itFlush->restFields.begin();
+        while(it != itFlush->restFields.end())
+        {
+            f.writeLine(string(it->data()) + "\r");
+            it++;
+        }
+        
+        it = itFlush->fld_v909.begin();
+        while(it != itFlush->fld_v909.end())
+        {
+            //cout << it->data();
+            f.writeLine("#909: " + pars.replaceRange(it->data()) + "\r");
+            it++;
+        }
+        
+        f.writeLine("*****\r");
+        itFlush++;
+    }
+    msg.print(EINFO, "Окончание сброса журналов");
+    f.fClose();
+}
+
+void formCKC::slot_flushNumbers() 
+{
+    msgs msg;
+    parser pars;
+    msg.print(EINFO, "Начинаю сбрасывать номера журналов");
+    f.fWOpen("jurnum_new.txt");
+    vector<jurnum>::const_iterator itFlush =  engn.jurnums.begin();
+    while (itFlush != engn.jurnums.end())
+    {
+        f.writeLine("#933: " + itFlush->cifer + "\r");
+        f.writeLine("#903: " + itFlush->cifer_jurnum + "\r");
+        vector<string>::const_iterator it = itFlush->restFields.begin();
+        while (it != itFlush->restFields.end())
+        {
+            f.writeLine(string(it->data()) + "\r");
+            it++;
+        }
+       
+        vector<jur>::const_iterator itJurs = engn.jurs.begin();
+        while (itJurs != engn.jurs.end())
+        {
+            if (itJurs ->cifer == itFlush->cifer)
+                break;
+            itJurs++;
+        }
+        
+    if (itFlush->fld_v910.size() == 0)
+        {
+//        cout << "заполняем" << endl;
+        vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
+        while (it909 != itJurs->fld_v909.end())
+        {
+//            cout << pars.getYear(it909->data()) << "              " << pars.getYear(itNums->cifer_jurnum) << endl;
+                if (pars.getYear(it909->data()) == pars.getYear(itNums->cifer_jurnum))
+                {
+                        vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
+                        vector<string>::const_iterator itRange = range.begin();
+                        bool inRange = false;
+                        while (itRange != range.end())
+                        {
+                                if (itRange->data() == pars.getNumber(itNums->cifer_jurnum))
+                                {
+                                        inRange = true;
+                                        break;
+                                }
+                                itRange++;
+                        }
+                        if (inRange)
+                        {
+                            string line = "#910: ^A0^B" + pars.filialToNumber(pars.getYear(itNums->cifer_jurnum)) +"^C" + pars.getYear(it909->data()) + "^D" + pars.getDivision(it909->data());
+                            f.writeLine(line + "\r");
+                        }
+                }
+            
+            it909++;
+        }
+    }        
+        
+
+        
+    it = itFlush->fld_v910.begin();
+    while (it != itFlush->fld_v910.end())
+    {
+        vector<string>::const_iterator it909 = itJurs->fld_v909.begin();
+        string line = "#910: ^A0^B" + pars.filialToNumber(pars.getDivision(it->data())) +
+                                "^C" + pars.getYear(it->data()) + "^D" + pars.getDivision(it->data());        
+        while (it909 != itJurs->fld_v909.end())
+        {
+
+            vector<string> range = pars.remakeRange(pars.getAccum_jur_h(it909->data()));
+            vector<string>::const_iterator itRange = range.begin();
+
+//          cout << pars.getYear(it909->data()) << "       " << pars.getYear(it->data()) << endl;
+            if (pars.getYear(it909->data()) == pars.getYear(it->data()))
+            {
+/*                cout << it909->data() << endl;
+                cout << it->data() << endl;
+                cout << "bingo" << endl;*/
+                bool inRange = false;
+                while (itRange != range.end())
+                {
+                    if (itRange->data() == pars.getNumber(itFlush->cifer_jurnum))
+                    {
+                        inRange = true;
+                        break;
+                     }
+                     itRange++;
+                }
+                if (inRange)
+               {
+//                    cout << "in range!" << endl;
+                    string jrnLine = "^A0^B" + pars.filialToNumber(pars.getDivision(it909->data()))  + "^C" + pars.getYear(it909->data()) + "^D" + pars.getDivision(it909->data());
+//                    cout << pars.getYear(it909->data())<< "   " << pars.getYear(it->data()) << "                       " <<  pars.getDivision(it909->data()) << "    " << pars.getDivision(it->data()) << endl;
+                    if ((pars.getYear(it909->data()))== pars.getYear(it->data()) && (pars.getDivision(it909->data()) == pars.getDivision(it->data())))
+                    {
+                        f.writeLine(line + "\r");
+ //                       cout << "will add" << endl;
+                    }
+                }
+            }        
+            it909++;
+
+        }
+//        if (!alreadyIn)
+//            f.writeLine("#910: " + line);
+
+        it++;
+        
+    }
+
+        
+        f.writeLine("*****\r");
+        itFlush++;
+    }
+    msg.print(EINFO, "Окончание сброса  номеров журналов");
+    f.fClose();
+}
+
